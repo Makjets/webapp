@@ -1,0 +1,29 @@
+micronaut:
+  application:
+    name: api
+  router:
+    static-resources:
+      swagger:
+        paths: classpath:META-INF/swagger
+        mapping: /swagger/**
+      swagger-ui:
+        paths: classpath:META-INF/swagger/views/swagger-ui
+        mapping: /swagger-ui/**
+  http:
+    client:
+      exception-on-error-status: false
+datasources:
+  hikari:
+    url: 'jdbc:mysql://localhost:6379'
+    username: 'user'
+    password: 'password'
+    driver-class-name: 'com.mysql.cj.jdbc.Driver'
+    connection-timeout: 2000
+    initialization-fail-timeout: -1
+netty:
+  default:
+    allocator:
+      max-order: 3
+endpoints:
+  health:
+    enabled: false
