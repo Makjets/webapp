@@ -5,6 +5,8 @@ import io.micronaut.http.*;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Error;
 import io.micronaut.http.annotation.Get;
+import io.micronaut.security.annotation.Secured;
+import io.micronaut.security.rules.SecurityRule;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +18,7 @@ import java.util.Arrays;
  * Controller for the health endpoint
  * @since 1.0
  */
+@Secured(SecurityRule.IS_ANONYMOUS)
 @Controller("/healthz")
 public class HealthController {
 
