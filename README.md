@@ -28,6 +28,11 @@ Before you begin, ensure you have the following tools installed on your system:
       spring.datasource.url=jdbc:mariadb://localhost:3306/yourdb
       spring.datasource.username=yourusername
       spring.datasource.password=yourpassword
+
+      ```
+      Specify the complete file location to load users into accounts table
+      ```properties
+      application.config.users-csv-path= users.csv
       ```
 
       Replace `yourdb`, `yourusername`, and `yourpassword` with your actual database information.
@@ -51,6 +56,7 @@ To run the application using Gradle, execute the following command:
 ```bash
 gradle bootRun
 ```
+Make sure the database is up before starting the application or it will fail to start throwing communication error
 
 The application will start, and you can access it at `http://localhost:8080`. Make sure your MariaDB database is running and configured correctly as per the `application.properties` file.
 
@@ -66,9 +72,8 @@ A Docker Compose file is provided to start the MariaDB database required by the 
    docker-compose up
    ```
 
-   This will start the MariaDB database and the Spring Boot application in separate containers.
+   This will start the MariaDB database
 
-3. The application will be available at `http://localhost:8080`, and it will connect to the database container automatically.
 
 ## Testing the Application
 
