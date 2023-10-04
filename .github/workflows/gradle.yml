@@ -29,6 +29,6 @@ jobs:
     - name: check java
       run: java -version && pwd && ls -al
     - name: Build with Gradle
-      run: ./gradlew build
+      run: ./gradlew build -Dorg.gradle.debug=true
       env:
         ACTIONS_RUNNER_DEBUG: ${{ secrets.ACTIONS_RUNNER_DEBUG }}
