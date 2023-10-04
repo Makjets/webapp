@@ -8,9 +8,8 @@
 name: Java CI with Gradle
 
 on:
-  pull_request:
-    branches:
-      - main
+  pull_request_target:
+    types: [ assigned, opened, synchronize, reopened ]
 
 permissions:
   contents: read
