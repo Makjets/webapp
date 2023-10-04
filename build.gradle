@@ -30,10 +30,30 @@ dependencies {
 
 	implementation group: 'com.opencsv', name: 'opencsv', version: '3.7'
 	implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation 'org.mariadb.jdbc:mariadb-java-client:3.2.0'
+
 
 	runtimeOnly("com.mysql:mysql-connector-j")
+
+	implementation 'com.intuit.karate:karate-core:1.4.0'
+	testImplementation 'com.intuit.karate:karate-junit5:1.4.0'
+
 }
 
-tasks.named('test') {
+test {
 	useJUnitPlatform()
+	systemProperty "karate.options", System.properties.getProperty("karate.options")
+	systemProperty "karate.env", System.properties.getProperty("karate.env")
+	outputs.upToDateWhen { false }
+	testLogging.showStandardStreams = true
+}
+
+sourceSets {
+	test {
+		resources {
+			srcDir file('src/test/java')
+			exclude '**/*.java'
+		}
+
+	}
 }
