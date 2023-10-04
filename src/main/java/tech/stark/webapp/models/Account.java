@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 public class Account {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.UUID)
     private String id;
     private String first_name;
     private String last_name;
