@@ -15,6 +15,12 @@ public class SecurityService implements UserDetailsService {
 
     private final AccountService accountService;
 
+    private User user;
+
+    public User getUser() {
+        return user;
+    }
+
     @Autowired
     public SecurityService(AccountService accountService) {
         this.accountService = accountService;
@@ -37,8 +43,8 @@ public class SecurityService implements UserDetailsService {
         Optional<Account> accountOptional = accountService.getByEmail(username);
 
         Account account = accountOptional.orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
-
-        return new User(account);
+        this.user = new User(account);
+        return user;
     }
 
 }

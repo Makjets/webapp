@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
@@ -72,10 +73,13 @@ public class AssignmentController {
         if(request.getQueryString()!=null || body!=null){
             return ResponseEntity.badRequest().build();
         }
-        if(assignmentService.deleteAssigment(id)){
-            return ResponseEntity.noContent().build();
-        } else {
+        Optional<Boolean> isDeleted = assignmentService.deleteAssigment(id);
+        if(isDeleted ==null){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } else if(!isDeleted.get()){
             return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.noContent().build();
         }
     }
 
@@ -89,6 +93,9 @@ public class AssignmentController {
             return ResponseEntity.badRequest().build();
         }
         Optional<Assignment> isAssignment = assignmentService.updateAssignment(id,assignment);
+        if(isAssignment==null){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         return isAssignment.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

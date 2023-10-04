@@ -12,6 +12,10 @@ public class User implements UserDetails {
 
     private Account account;
 
+    public Account getAccount() {
+        return account;
+    }
+
     public User(Account account) {
         this.account = account;
     }
@@ -94,4 +98,5 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+    
 }
