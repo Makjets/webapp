@@ -35,9 +35,9 @@ jobs:
         mysql root password: 'password' # Required if "mysql user" is empty, default is empty. The root superuser password
         mysql user: 'user' # Required if "mysql root password" is empty, default is empty. The superuser for the specified database. Can use secrets, too
         mysql password: 'password'
-    - name: check java
+    - name: checks
       run: java -version && pwd && ls -al
-    - name: Build with Gradle
+    - name: Test with Gradle
       run: gradle test
       env:
         ACTIONS_RUNNER_DEBUG: ${{ secrets.ACTIONS_RUNNER_DEBUG }}
