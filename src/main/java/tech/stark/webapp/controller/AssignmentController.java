@@ -2,6 +2,7 @@ package tech.stark.webapp.controller;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.annotation.Nullable;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +28,21 @@ public class AssignmentController {
     @Autowired
     private AssignmentService assignmentService;
     @GetMapping
-    public HttpEntity<List<Assignment>> getAllAssignments() {
-        LOGGER.info("AssignmentController.getAssignments() called");
+    public HttpEntity<List<Assignment>> getAllAssignments(HttpServletRequest request,
+                                                          @RequestBody @Nullable String body) {
+        if(request.getQueryString()!=null || body!=null){
+            return ResponseEntity.badRequest().build();
+        }
         return ResponseEntity.ok(assignmentService.getAssignments(null));
     }
 
     @GetMapping(path = "/{id}")
-    public HttpEntity<List<Assignment>> getAllAssignments(@PathVariable String id) {
-        LOGGER.info("AssignmentController.getAssignments() called");
+    public HttpEntity<List<Assignment>> getAssignments(HttpServletRequest request,
+                                                       @PathVariable String id,
+                                                       @RequestBody @Nullable String body) {
+        if(request.getQueryString()!=null || body!=null){
+            return ResponseEntity.badRequest().build();
+        }
         List<Assignment> assignments = assignmentService.getAssignments(id);
         if(assignments==null){
             return ResponseEntity.notFound().build();
@@ -44,14 +52,21 @@ public class AssignmentController {
     }
 
     @PostMapping
-    public ResponseEntity<Assignment> createAssignment(@RequestBody Assignment assignment) {
-        LOGGER.info("AssignmentController.createAssignment(Assignment assignment) called");
+    public ResponseEntity<Assignment> createAssignment(@RequestBody Assignment assignment,
+                                                       HttpServletRequest request) {
+        if(request.getQueryString()!=null){
+            return ResponseEntity.badRequest().build();
+        }
         return ResponseEntity.ok(assignmentService.save(assignment));
     }
 
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<Assignment> deleteAssignment(@PathVariable String id) {
-        LOGGER.info("id");
+    public ResponseEntity<Assignment> deleteAssignment(@PathVariable String id,
+                                                       HttpServletRequest request,
+                                                       @RequestBody @Nullable String body) {
+        if(request.getQueryString()!=null || body!=null){
+            return ResponseEntity.badRequest().build();
+        }
         if(assignmentService.deleteAssigment(id)){
             return ResponseEntity.noContent().build();
         } else {
@@ -60,8 +75,12 @@ public class AssignmentController {
     }
 
     @PutMapping(path = "/{id}")
-    public ResponseEntity<Assignment> updateAssignment(@PathVariable String id, @RequestBody Assignment assignment) {
-        LOGGER.info(id);
+    public ResponseEntity<Assignment> updateAssignment(@PathVariable String id,
+                                                       @RequestBody Assignment assignment,
+                                                       HttpServletRequest request) {
+        if(request.getQueryString()!=null){
+            return ResponseEntity.badRequest().build();
+        }
         Optional<Assignment> isAssignment = assignmentService.updateAssignment(id,assignment);
         return isAssignment.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
