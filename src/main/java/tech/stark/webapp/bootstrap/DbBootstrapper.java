@@ -4,24 +4,24 @@ import com.opencsv.CSVReader;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.HeaderColumnNameMappingStrategy;
 import org.apache.commons.lang3.SystemUtils;
+import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;
 import tech.stark.webapp.models.Account;
 import tech.stark.webapp.repository.AccountRepository;
+import tech.stark.webapp.security.BcryptEncoder;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.security.Timestamp;
-import java.sql.Time;
 import java.time.Instant;
-import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -32,6 +32,9 @@ public class DbBootstrapper implements ApplicationListener<ApplicationReadyEvent
 
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    private BcryptEncoder bcryptEncoder;
 
     @Value("${application.config.users-csv-path}")
     private String filePath;
@@ -58,12 +61,19 @@ public class DbBootstrapper implements ApplicationListener<ApplicationReadyEvent
             CsvToBean<Account> csvToBean = new CsvToBean<Account>();
             List<Account> accounts = csvToBean.parse(beanStrategy, reader);
             accounts.forEach(account -> {
-               String hash = BCrypt.hashpw(account.getPassword(),BCrypt.gensalt(rounds));
+               String hash = bcryptEncoder.encode(account.getPassword());
                account.setPassword(hash);
                account.setAccount_created(Instant.now().toString());
                account.setAccount_updated(Instant.now().toString());
             });
-            accountRepository.saveAll(accounts);
+            accounts.forEach(account -> {
+                try {
+                    accountRepository.save(account);
+                } catch (DataIntegrityViolationException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            });
+
             LOGGER.info(accounts.toString());
             reader.close();
 

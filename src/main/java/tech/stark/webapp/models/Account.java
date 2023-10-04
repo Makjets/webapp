@@ -22,6 +22,7 @@ public class Account {
     private String id;
     private String first_name;
     private String last_name;
+    @Column(unique=true)
     private String email;
     private String password;
     private String account_created;

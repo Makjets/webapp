@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import tech.stark.webapp.models.Assignment;
 import tech.stark.webapp.repository.AssignmentRepository;
 
@@ -12,7 +13,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-@Component
+@Service
 public class AssignmentService {
 
     @Autowired
