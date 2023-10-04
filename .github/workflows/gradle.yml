@@ -29,6 +29,4 @@ jobs:
     - name: check java
       run: java -version && pwd && ls -al
     - name: Build with Gradle
-      run: ./gradlew
-      with:
-        arguments: build
+      run: ./gradlew build
