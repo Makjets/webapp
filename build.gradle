@@ -1,84 +1,36 @@
 plugins {
-    id("com.github.johnrengelman.shadow") version "7.1.2"
-    id("io.micronaut.application") version "3.7.10"
+	id 'java'
+	id 'org.springframework.boot' version '3.1.4'
+	id 'io.spring.dependency-management' version '1.1.3'
 }
 
-version = "0.1"
-group = "tech.stark"
+group = 'tech.stark'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = '17'
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
 
 repositories {
-    mavenCentral()
+	mavenCentral()
 }
 
 dependencies {
-    annotationProcessor("io.micronaut:micronaut-http-validation")
-    annotationProcessor("io.micronaut.openapi:micronaut-openapi")
-    annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
-    annotationProcessor("io.micronaut.security:micronaut-security-annotations")
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
-    implementation 'io.projectreactor:reactor-core:3.5.10'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.0.1'
-
-    compileOnly 'org.projectlombok:lombok:1.18.30'
-    annotationProcessor 'org.projectlombok:lombok:1.18.30'
-
-    testCompileOnly 'org.projectlombok:lombok:1.18.30'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
-
-    implementation("io.micronaut.security:micronaut-security")
-    implementation("io.micronaut:micronaut-http-client")
-    implementation("io.micronaut:micronaut-jackson-databind")
-    implementation("io.micronaut:micronaut-management")
-    implementation("io.micronaut.serde:micronaut-serde-jackson")
-    implementation("io.micronaut.sql:micronaut-jdbc-hikari")
-    implementation("io.swagger.core.v3:swagger-annotations")
-    implementation("jakarta.annotation:jakarta.annotation-api")
-    implementation 'mysql:mysql-connector-java:8.0.28'
-
-    implementation("io.micronaut.sql:micronaut-hibernate-jpa")
-    implementation("io.micronaut.sql:micronaut-jdbc-hikari")
-    runtimeOnly("com.h2database:h2")
-    implementation("jakarta.persistence:jakarta.persistence-api:2.2.3")
-
-    runtimeOnly("ch.qos.logback:logback-classic")
-    testImplementation("org.mockito:mockito-core")
-    testImplementation("org.testcontainers:junit-jupiter")
-    testImplementation("org.testcontainers:testcontainers")
-    testImplementation 'org.mockito:mockito-core:2.1.0'
-
-    testImplementation "org.junit.jupiter:junit-jupiter:5.8.1"
-    testImplementation "org.testcontainers:testcontainers:1.19.0"
-    testImplementation "org.testcontainers:junit-jupiter:1.19.0"
-    testImplementation "org.testcontainers:mysql:1.19.0"
-
-
+	runtimeOnly("com.mysql:mysql-connector-j")
 }
 
-
-application {
-    mainClass.set("tech.stark.Application")
+tasks.named('test') {
+	useJUnitPlatform()
 }
-java {
-    sourceCompatibility = JavaVersion.toVersion("17")
-    targetCompatibility = JavaVersion.toVersion("17")
-}
-
-graalvmNative.toolchainDetection = false
-micronaut {
-    runtime("netty")
-    testRuntime("junit5")
-    processing {
-        incremental(true)
-        annotations("tech.stark.*")
-    }
-}
-
-
-
-configurations.all {
-    resolutionStrategy.dependencySubstitution {
-        substitute(module("io.micronaut:micronaut-jackson-databind"))
-            .using(module("io.micronaut.serde:micronaut-serde-jackson:1.5.3"))
-    }
-}
-

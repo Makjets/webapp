@@ -1,6 +1,6 @@
-package tech.stark.domain;
+package tech.stark.webapp.models;
 
-import io.micronaut.serde.annotation.Serdeable;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,9 +10,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Serdeable
+@Entity
+@Table(name = "Assignment")
 public class Assignment {
-
+    @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
     private String id;
     private String name;
     private int points;
