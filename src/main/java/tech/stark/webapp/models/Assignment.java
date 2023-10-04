@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "Assignment")
 public class Assignment {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.UUID)
     private String id;
     private String name;
     private int points;
