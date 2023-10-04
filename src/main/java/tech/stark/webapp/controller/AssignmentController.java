@@ -75,7 +75,7 @@ public class AssignmentController {
         }
         Optional<Boolean> isDeleted = assignmentService.deleteAssigment(id);
         if(isDeleted ==null){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         } else if(!isDeleted.get()){
             return ResponseEntity.notFound().build();
         } else {
@@ -94,7 +94,7 @@ public class AssignmentController {
         }
         Optional<Assignment> isAssignment = assignmentService.updateAssignment(id,assignment);
         if(isAssignment==null){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         return isAssignment.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
