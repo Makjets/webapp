@@ -6,7 +6,7 @@ This README provides instructions for building, running, and testing a Spring Bo
 
 Before you begin, ensure you have the following tools installed on your system:
 
-- Java Development Kit (JDK) 8 or higher
+- Java Development Kit (JDK) 17 or higher
 - Gradle (https://gradle.org/)
 - Docker (https://www.docker.com/)
 

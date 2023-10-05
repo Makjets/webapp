@@ -63,8 +63,9 @@ public class DbBootstrapper implements ApplicationListener<ApplicationReadyEvent
             accounts.forEach(account -> {
                String hash = bcryptEncoder.encode(account.getPassword());
                account.setPassword(hash);
-               account.setAccount_created(Instant.now().toString());
-               account.setAccount_updated(Instant.now().toString());
+               String now = Instant.now().toString();
+               account.setAccount_created(now);
+               account.setAccount_updated(now);
             });
             accounts.forEach(account -> {
                 try {

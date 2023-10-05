@@ -43,8 +43,9 @@ public class AssignmentService {
 
     public Assignment save(Assignment assignment) {
         assignment.setUser_email(securityService.getUser().getUsername());
-        assignment.setAssignment_created(Instant.now().toString());
-        assignment.setAssignment_updated(Instant.now().toString());
+        String now = Instant.now().toString();
+        assignment.setAssignment_created(now);
+        assignment.setAssignment_updated(now);
         return assignmentRepository.save(assignment);
     }
 
