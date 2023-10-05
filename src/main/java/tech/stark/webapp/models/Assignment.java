@@ -1,11 +1,9 @@
 package tech.stark.webapp.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @Builder
@@ -17,10 +15,13 @@ public class Assignment {
     @Id
     @GeneratedValue(strategy= GenerationType.UUID)
     private String id;
-
+    @Nonnull
     private String name;
-    private int points;
-    private int num_of_attempts;
+    @Nonnull
+    private Integer points;
+    @Nonnull
+    private Integer num_of_attempts;
+    @Nonnull
     private String deadline;
     private String assignment_created;
     private String assignment_updated;

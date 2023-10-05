@@ -62,8 +62,10 @@ public class AssignmentController {
             return ResponseEntity.badRequest().build();
         } else if (assignment.getPoints()<min || assignment.getPoints()>max){
             return ResponseEntity.badRequest().build();
+        } else if(assignment.getName()==null || assignment.getPoints()==null || assignment.getDeadline()==null || assignment.getNum_of_attempts()==null){
+            return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(assignmentService.save(assignment));
+        return ResponseEntity.status(HttpStatus.CREATED).body(assignmentService.save(assignment));
     }
 
     @DeleteMapping(path = "/{id}")
@@ -90,6 +92,8 @@ public class AssignmentController {
         if(request.getQueryString()!=null){
             return ResponseEntity.badRequest().build();
         } else if (assignment.getPoints()<min || assignment.getPoints()>max){
+            return ResponseEntity.badRequest().build();
+        } else if(assignment.getName()==null || assignment.getPoints()==null || assignment.getDeadline()==null || assignment.getNum_of_attempts()==null){
             return ResponseEntity.badRequest().build();
         }
         Optional<Assignment> isAssignment = assignmentService.updateAssignment(id,assignment);
