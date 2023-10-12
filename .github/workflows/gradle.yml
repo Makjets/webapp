@@ -27,15 +27,15 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-    # - name: install mariadb
-    #   uses: getong/mariadb-action@v1.1
-    #   with:
-    #     host port: 3306 # Optional, default value is 3306. The port of host
-    #     container port: 3306 # Optional, default value is 3306. The port of container
-    #     mariadb version: '10.4.10' # Optional, default value is "latest". The version of the MariaDB
-    #     mysql database: 'db' # Optional, default value is "test". The specified database which will be create
-    #     mysql user: 'user' # Required if "mysql root password" is empty, default is empty. The superuser for the specified database. Can use secrets, too
-    #     mysql password: 'password'
+    - name: install mariadb
+      uses: getong/mariadb-action@v1.1
+      with:
+        host port: 3306 # Optional, default value is 3306. The port of host
+        container port: 3306 # Optional, default value is 3306. The port of container
+        mariadb version: '10.4.10' # Optional, default value is "latest". The version of the MariaDB
+        mysql database: 'db' # Optional, default value is "test". The specified database which will be create
+        mysql user: ${{ secrets.MYSQL_USER }} # Required if "mysql root password" is empty, default is empty. The superuser for the specified database. Can use secrets, too
+        mysql password: ${{ secrets.MYSQL_PASSWORD }}
     - name: checks
       run: java -version && pwd && ls -al
     - name: Test with Gradle
