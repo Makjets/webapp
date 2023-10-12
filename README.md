@@ -87,7 +87,7 @@ For detailed documentation on writing and running Karate tests, refer to the [Ka
 
 ## Docker Compose File Description
 
-The `docker-compose.yml` file included in this repository is responsible for starting the MariaDB database container required by the application. For more information on Docker Compose, refer to the [Docker Compose documentation](https://docs.docker.com/compose/).
+The `docker-compose.yml` file included in this repository is responsible for starting the MariaDB database container required by the application. For more information on Docker Compose, refer to the [Docker Compose documentation](https://docs.docker.com/compose/). 
 
 ## License
 
