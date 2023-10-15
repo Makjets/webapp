@@ -81,4 +81,3 @@ build {
   provisioner "shell" {
     script = "${var.setup_script}"
   }
-}
