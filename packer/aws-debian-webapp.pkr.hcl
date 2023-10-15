@@ -70,8 +70,7 @@ source "amazon-ebs" "my-debian-ami" {
 
 build {
   sources = [
-    "source.amazon-ebs.my-debian-ami",
-  ]
+    "source.amazon-ebs.my-debian-ami",]
 
   //   provisioner "file" {
   //     source      = "${var.setup_script}"
@@ -79,6 +78,6 @@ build {
   //   }
 
   provisioner "shell" {
-    script = "${var.setup_script}"
+                          script = "${var.setup_script}"
   }
 }
