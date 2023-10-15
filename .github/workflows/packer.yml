@@ -20,6 +20,9 @@ jobs:
       - name: checks
         run: git rev-parse HEAD && git status
 
+      - name: pwd ls 
+        run: pwd && ls -al
+        
       - name: Setup `packer`
         uses: hashicorp/setup-packer@main
         id: setup
