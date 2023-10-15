@@ -1,0 +1,42 @@
+name: packer-validate
+
+on:
+  pull_request_target:
+    types: [ assigned, opened, synchronize, reopened ]
+
+env:
+  PRODUCT_VERSION: "1.8.6" # or: "latest"
+
+jobs:
+  packer-validate:
+    runs-on: ubuntu-latest
+    name: Run Packer
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      
+      - name: checks
+        run: git rev-parse HEAD && git status
+
+      - name: Setup `packer`
+        uses: hashicorp/setup-packer@main
+        id: setup
+        with:
+          version: ${{ env.PRODUCT_VERSION }}
+
+      - name: Run `packer init`
+        id: init
+        working-directory: ./packer
+        run: "packer init ."
+
+      - name: Run `packer fmt`
+        id: validate
+        working-directory: ./packer
+        run: "packer fmt -check ."
+
+      - name: Run `packer validate`
+        id: validate
+        working-directory: ./packer
+        run: "packer validate ."
