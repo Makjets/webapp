@@ -78,6 +78,6 @@ build {
   //   }
 
   provisioner "shell" {
-    script = "${var.setup_scrit}"
+    script = "${var.setup_script}"
   }
 }
