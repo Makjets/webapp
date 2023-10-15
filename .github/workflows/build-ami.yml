@@ -1,8 +1,9 @@
-name: packer-validate
+name: build-ami
 
 on:
-  pull_request_target:
-    types: [ assigned, opened, synchronize, reopened ]
+  push:
+    branches:
+      - main
 
 permissions:
   contents: read
@@ -11,20 +12,25 @@ env:
   PRODUCT_VERSION: "1.8.6" # or: "latest"
 
 jobs:
-  packer-validate:
+  build-ami:
     runs-on: ubuntu-latest
-    name: Validate Packer
+    name: Build webapp ami
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
       
       - name: checks
         run: git rev-parse HEAD && git status
 
       - name: pwd ls 
         run: pwd && ls -al
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
 
       - name: Setup `packer`
         uses: hashicorp/setup-packer@main
@@ -37,12 +43,7 @@ jobs:
         working-directory: ./packer
         run: "packer init ."
 
-      - name: Run `packer fmt`
+      - name: Run `packer build`
         id: format
         working-directory: ./packer
-        run: "packer fmt -check ."
-
-      - name: Run `packer validate`
-        id: validate
-        working-directory: ./packer
-        run: "packer validate ."
+        run: "packer build --var aws_profile=default ."
