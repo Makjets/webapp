@@ -41,3 +41,4 @@ out/
 .settings
 .classpath
 .factorypath
+.vscode/
