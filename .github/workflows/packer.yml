@@ -22,7 +22,7 @@ jobs:
 
       - name: pwd ls 
         run: pwd && ls -al
-        
+
       - name: Setup `packer`
         uses: hashicorp/setup-packer@main
         id: setup
@@ -35,7 +35,7 @@ jobs:
         run: "packer init ."
 
       - name: Run `packer fmt`
-        id: validate
+        id: format
         working-directory: ./packer
         run: "packer fmt -check ."
 
