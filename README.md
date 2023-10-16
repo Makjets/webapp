@@ -96,5 +96,3 @@ This Spring Boot application is licensed under the MIT License. See the [LICENSE
 ---
 
 Feel free to contribute to this project and improve its functionality. If you encounter any issues or have questions, please create an issue on the GitHub repository. Happy coding!
-
-
