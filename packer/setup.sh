@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Set the -e option
+set -e
+
 #Setting enviornment variables
 USER_CSV_FILE=/opt/user.csv
 

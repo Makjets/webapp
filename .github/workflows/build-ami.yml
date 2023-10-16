@@ -15,6 +15,11 @@ jobs:
   build-ami:
     runs-on: ubuntu-latest
     name: Build webapp ami
+    env:
+      MYSQL_USER: ${{ secrets.MYSQL_USER }}
+      MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+      MYSQL_DB: ${{ env.MYSQL_DB }}
+      DEBIAN_AMI_ID: ${{ env.DEBIAN_AMI_ID }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -72,4 +77,4 @@ jobs:
       - name: Run `packer build`
         id: format
         working-directory: ./packer
-        run: "packer build --var aws_profile=default ."
+        run: "packer build --var aws_profile=default --var source_ami=env.DEBIAN_AMI_ID ."
