@@ -1,9 +1,6 @@
 #!/bin/bash
 
 #Setting enviornment variables
-MYSQL_DB="db"
-MYSQL_USER="user"
-MYSQL_PASSWORD="password"
 USER_CSV_FILE=/opt/user.csv
 
 export MYSQL_DB
