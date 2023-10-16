@@ -37,6 +37,16 @@ variable "setup_script" {
   default = "setup.sh"
 }
 
+variable "jar_file" {
+  type    = string
+  default = "../build/libs/webapp-0.0.1-SNAPSHOT.jar"
+}
+
+variable "user_csv_file" {
+  type    = string
+  default = "../users.csv"
+}
+
 # https://www.packer.io/plugins/builders/amazon/ebs
 source "amazon-ebs" "my-debian-ami" {
   region  = "${var.aws_region}"
@@ -72,10 +82,25 @@ build {
   sources = [
   "source.amazon-ebs.my-debian-ami", ]
 
-  //   provisioner "file" {
-  //     source      = "${var.setup_script}"
-  //     destination = "/tmp/${var.setup_script}"
-  //   }
+  provisioner "file" {
+    source      = "${var.jar_file}"
+    destination = "/tmp/webapp.jar"
+    generated   = true
+    timeout     = "2m"
+  }
+
+  provisioner "file" {
+    source      = "${var.user_csv_file}"
+    destination = "/tmp/users.csv"
+  }
+
+  provisioner "shell" {
+    inline = [
+      "pwd",
+      "sudo mv /tmp/webapp.jar /opt/webapp.jar",
+      "sudo mv /tmp/users.csv /opt/users.csv",
+    ]
+  }
 
   provisioner "shell" {
     script = "${var.setup_script}"

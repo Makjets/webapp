@@ -25,6 +25,22 @@ jobs:
       - name: pwd ls 
         run: pwd && ls -al
 
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: integration test
+        run: gradle test
+        env:
+          ACTIONS_RUNNER_DEBUG: ${{ secrets.ACTIONS_RUNNER_DEBUG }}
+      
+      - name: Build with Gradle
+        run: gradle assemble
+        env:
+          ACTIONS_RUNNER_DEBUG: ${{ secrets.ACTIONS_RUNNER_DEBUG }}
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
