@@ -14,7 +14,7 @@ variable "aws_region" {
 
 variable "aws_profile" {
   type    = string
-  default = "dev"
+  default = "default"
 }
 
 variable "source_ami" {
