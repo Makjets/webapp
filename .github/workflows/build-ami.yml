@@ -77,4 +77,4 @@ jobs:
       - name: Run `packer build`
         id: format
         working-directory: ./packer
-        run: "packer build --var aws_profile=default --var source_ami=vars.DEBIAN_AMI_ID ."
+        run: "packer build --var aws_profile=default --var source_ami={{ vars.DEBIAN_AMI_ID }}."
