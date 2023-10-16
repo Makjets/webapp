@@ -37,16 +37,29 @@ variable "setup_script" {
   default = "setup.sh"
 }
 
-variable "jar_file" {
-  type    = string
-  default = "../build/libs/webapp-0.0.1-SNAPSHOT.jar"
+variable "files" {
+  type = object({
+    jar_file      = string
+    user_csv_file = string
+  })
+  default = {
+    jar_file      = "../build/libs/webapp-0.0.1-SNAPSHOT.jar"
+    user_csv_file = "../users.csv"
+  }
 }
 
-variable "user_csv_file" {
-  type    = string
-  default = "../users.csv"
+variable "sql_config" {
+  type = object({
+    sql_user     = string
+    sql_password = string
+    sql_db       = string
+  })
+  default = {
+    sql_user     = env("MYSQL_USER")
+    sql_password = env("MYSQL_PASSWORD")
+    sql_db       = env("MYSQL_DB")
+  }
 }
-
 # https://www.packer.io/plugins/builders/amazon/ebs
 source "amazon-ebs" "my-debian-ami" {
   region  = "${var.aws_region}"
@@ -83,14 +96,14 @@ build {
   "source.amazon-ebs.my-debian-ami", ]
 
   provisioner "file" {
-    source      = "${var.jar_file}"
+    source      = "${var.files.jar_file}"
     destination = "/tmp/webapp.jar"
     generated   = true
     timeout     = "2m"
   }
 
   provisioner "file" {
-    source      = "${var.user_csv_file}"
+    source      = "${var.files.user_csv_file}"
     destination = "/tmp/users.csv"
   }
 
@@ -104,5 +117,10 @@ build {
 
   provisioner "shell" {
     script = "${var.setup_script}"
+    environment_vars = [
+      "MYSQL_USER=${var.sql_config.sql_user}",
+      "MYSQL_DB=${var.sql_config.sql_db}",
+      "MYSQL_PASSWORD=${var.sql_config.sql_password}",
+    ]
   }
 }
