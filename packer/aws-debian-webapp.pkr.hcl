@@ -118,6 +118,8 @@ build {
   provisioner "shell" {
     script = "${var.setup_script}"
     environment_vars = [
+      "DEBIAN_FRONTEND=noninteractive",
+      "CHECKPOINT_DISABLE=1",
       "MYSQL_USER=${var.sql_config.sql_user}",
       "MYSQL_DB=${var.sql_config.sql_db}",
       "MYSQL_PASSWORD=${var.sql_config.sql_password}",
