@@ -85,7 +85,7 @@ build {
   provisioner "file" {
     source      = "${var.jar_file}"
     destination = "/tmp/webapp.jar"
-    generated = true
+    generated   = true
     timeout     = "2m"
   }
 
