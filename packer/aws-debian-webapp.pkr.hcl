@@ -74,7 +74,7 @@ source "amazon-ebs" "my-debian-ami" {
   ]
 
   aws_polling {
-    delay_seconds = 5
+    delay_seconds = 15
     max_attempts  = 50
   }
 
