@@ -77,4 +77,4 @@ jobs:
       - name: Run `packer build`
         id: build
         working-directory: ./packer
-        run: packer build --var source_ami=${{ vars.DEBIAN_AMI_ID }} .
+        run: packer build --var source_ami=${{ vars.DEBIAN_AMI_ID }} --var github_sha=${{ github.sha }} .

@@ -7,6 +7,11 @@ packer {
   }
 }
 
+variable "github_sha" {
+  type    = string
+  default = "<<github_sha>>"
+}
+
 variable "aws_region" {
   type    = string
   default = "us-east-1"
@@ -64,6 +69,10 @@ variable "sql_config" {
 source "amazon-ebs" "my-debian-ami" {
   region  = "${var.aws_region}"
   profile = "${var.aws_profile}"
+  tags = {
+    "Name"       = "webapp_${formatdate("YYYY_MM_DD_hh_mm_ss", timestamp())}",
+    "github-sha" = "${var.github_sha}",
+  }
   ami_users = [
     "868203542116",
   ]
@@ -79,9 +88,17 @@ source "amazon-ebs" "my-debian-ami" {
   }
 
   instance_type = "t2.micro"
-  source_ami    = "${var.source_ami}"
-  ssh_username  = "${var.ssh_username}"
-  subnet_id     = "${var.subnet_id}"
+  source_ami_filter {
+    filters = {
+      name                = "debian-12-amd64-*"
+      root-device-type    = "ebs"
+      virtualization-type = "hvm"
+    }
+    owners      = ["amazon"]
+    most_recent = true
+  }
+  ssh_username = "${var.ssh_username}"
+  subnet_id    = "${var.subnet_id}"
 
   launch_block_device_mappings {
     delete_on_termination = true
