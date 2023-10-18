@@ -42,3 +42,4 @@ out/
 .classpath
 .factorypath
 .vscode/
+*.DS_Store
