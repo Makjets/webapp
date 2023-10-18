@@ -17,6 +17,11 @@ variable "aws_region" {
   default = "us-east-1"
 }
 
+variable "ami_region" {
+  type    = string
+  default = "us-east-1"
+}
+
 variable "aws_profile" {
   type    = string
   default = "default"
@@ -79,7 +84,7 @@ source "amazon-ebs" "my-debian-ami" {
   ami_name        = "webapp_${formatdate("YYYY_MM_DD_hh_mm_ss", timestamp())}"
   ami_description = "AMI for CSYE 6225 webapp"
   ami_regions = [
-    "us-east-1",
+    var.ami_region,
   ]
 
   aws_polling {
