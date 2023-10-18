@@ -12,6 +12,11 @@ variable "github_sha" {
   default = "<<github_sha>>"
 }
 
+variable "ami_user" {
+  type    = string
+  default = "868203542116"
+}
+
 variable "aws_region" {
   type    = string
   default = "us-east-1"
@@ -79,7 +84,7 @@ source "amazon-ebs" "my-debian-ami" {
     "github-sha" = "${var.github_sha}",
   }
   ami_users = [
-    "868203542116",
+    "${var.ami_user}",
   ]
   ami_name        = "webapp_${formatdate("YYYY_MM_DD_hh_mm_ss", timestamp())}"
   ami_description = "AMI for CSYE 6225 webapp"
