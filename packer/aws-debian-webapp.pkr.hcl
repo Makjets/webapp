@@ -151,5 +151,5 @@ build {
       "MYSQL_DB=${var.sql_config.sql_db}",
       "MYSQL_PASSWORD=${var.sql_config.sql_password}",
     ]
-  }
+  
 }
