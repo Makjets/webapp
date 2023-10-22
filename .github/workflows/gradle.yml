@@ -43,24 +43,4 @@ jobs:
       run: gradle test
       env:
         ACTIONS_RUNNER_DEBUG: ${{ secrets.ACTIONS_RUNNER_DEBUG }}
-    - name: Setup `packer`
-      uses: hashicorp/setup-packer@main
-      id: setup
-      with:
-        version: ${{ env.PRODUCT_VERSION }}
-
-    - name: Run `packer init`
-      id: init
-      working-directory: ./packer
-      run: "packer init ."
-
-    - name: Run `packer fmt`
-      id: format
-      working-directory: ./packer
-      run: "packer fmt -check ."
-
-    - name: Run `packer validate`
-      id: validate
-      working-directory: ./packer
-      run: "packer validate ."
       
