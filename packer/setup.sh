@@ -15,4 +15,7 @@ sudo useradd csye6225
 sudo chown csye6225:csye6225 /opt/webapp.jar
 sudo chmod 0700 /opt/webapp.jar
 
+sudo systemctl daemon-reload
+sudo systemctl enable webapp.service
+
 echo "Server setup completed."
