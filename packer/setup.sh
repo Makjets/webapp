@@ -13,12 +13,11 @@ sudo apt-get install -y openjdk-17-jdk
 # Create user for app
 sudo useradd csye6225
 
-sudo mkdir -p /opt/csye6225
+sudo groupadd csye6225
+sudo useradd -s /bin/false -g csye6225 -d /opt/csye6225 -m csye6225
+
 sudo mv /opt/webapp.jar /opt/csye6225/webapp.jar
 sudo mv /opt/users.csv /opt/csye6225/users.csv
-
-sudo chown csye6225:csye6225 /opt/csye6225
-sudo chmod 0700 /opt/csye6225
 
 sudo systemctl daemon-reload
 sudo systemctl enable webapp.service
