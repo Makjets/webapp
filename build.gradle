@@ -32,6 +32,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation 'org.mariadb.jdbc:mariadb-java-client:3.2.0'
 
+	implementation "com.networknt:json-schema-validator:1.0.83"
 
 	runtimeOnly("com.mysql:mysql-connector-j")
 
