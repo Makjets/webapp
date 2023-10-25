@@ -11,8 +11,6 @@ sudo apt-get upgrade -y
 sudo apt-get install -y openjdk-17-jdk
 
 # Create user for app
-sudo useradd csye6225
-
 sudo groupadd csye6225
 sudo useradd -s /bin/false -g csye6225 -d /opt/csye6225 -m csye6225
 
