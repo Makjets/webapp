@@ -1,13 +1,15 @@
 [Unit]
 Description=CSYE6225 Web Application
-After=network.target
+After=network.target cloud-init-local.service cloud-init.service cloud-config.service cloud-final.service
 
 [Service]
 User=csye6225
 WorkingDirectory=/opt
-ExecStart=/usr/bin/java -jar /opt/webapp.jar
+ExecStart=/usr/bin/java -jar /opt/webapp.jar --spring.config.location=/opt/
 Restart=always
 Type=simple
+StandardOutput=append:/var/log/webapp.log
+StandardError=append:/var/log/webapp-error.log
 
 [Install]
 WantedBy=multi-user.target

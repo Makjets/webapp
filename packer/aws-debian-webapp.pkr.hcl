@@ -47,19 +47,18 @@ variable "subnet_id" {
   default = "subnet-0fd0603dd79ab41f5"
 }
 
-variable "setup_script" {
-  type    = string
-  default = "setup.sh"
-}
-
 variable "files" {
   type = object({
     jar_file      = string
     user_csv_file = string
+    setup_script  = string
+    systemd_file  = string
   })
   default = {
+    setup_script  = "setup.sh"
     jar_file      = "../build/libs/webapp-0.0.1-SNAPSHOT.jar"
     user_csv_file = "../users.csv"
+    systemd_file  = "webapp.service"
   }
 }
 
@@ -134,16 +133,22 @@ build {
     destination = "/tmp/users.csv"
   }
 
+  provisioner "file" {
+    source      = "${var.files.systemd_file}"
+    destination = "/tmp/webapp.service"
+  }
+
   provisioner "shell" {
     inline = [
       "pwd",
       "sudo mv /tmp/webapp.jar /opt/webapp.jar",
       "sudo mv /tmp/users.csv /opt/users.csv",
+      "sudo mv /tmp/webapp.service /etc/systemd/system/webapp.service",
     ]
   }
 
   provisioner "shell" {
-    script = "${var.setup_script}"
+    script = "${var.files.setup_script}"
     environment_vars = [
       "DEBIAN_FRONTEND=noninteractive",
       "CHECKPOINT_DISABLE=1",
