@@ -1,5 +1,8 @@
 package tech.stark.webapp.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Nullable;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -11,8 +14,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
+import tech.stark.webapp.controller.error.JsonFormatException;
 import tech.stark.webapp.models.Assignment;
 import tech.stark.webapp.service.AssignmentService;
+import tech.stark.webapp.service.ValidationService;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +26,7 @@ import java.util.Optional;
 @RequestMapping("/v1/assignments")
 public class AssignmentController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AssignmentController.class);
+    private static final String CREATE_REQUEST_SCHEMA = "assignment_schema.json";
 
     @Value("${application.config.min-points}")
     private int min;
@@ -29,6 +35,9 @@ public class AssignmentController {
     private int max;
     @Autowired
     private AssignmentService assignmentService;
+
+    @Autowired
+    private ValidationService validationService;
     @GetMapping
     public HttpEntity<List<Assignment>> getAllAssignments(HttpServletRequest request,
                                                           @RequestBody @Nullable String body) {
@@ -54,10 +63,17 @@ public class AssignmentController {
     }
 
     @PostMapping
-    public ResponseEntity<Assignment> createAssignment(@RequestBody Assignment assignment,
+    public ResponseEntity<Assignment> createAssignment(@RequestBody String createRequest,
                                                        HttpServletRequest request) {
-        LOGGER.info("min "+min+" max "+max);
-        LOGGER.info(String.valueOf(assignment.getNum_of_attempts()));
+
+        JsonNode requestJson = validationService.validateJson(createRequest, CREATE_REQUEST_SCHEMA);
+        ObjectMapper objectMapper = new ObjectMapper();
+        Assignment assignment = null;
+        try {
+            assignment = objectMapper.treeToValue(requestJson, Assignment.class);
+        } catch (JsonProcessingException e) {
+            throw new JsonFormatException(e.getMessage());
+        }
         if(request.getQueryString()!=null){
             return ResponseEntity.badRequest().build();
         } else if (assignment.getPoints()<min || assignment.getPoints()>max){
@@ -87,8 +103,17 @@ public class AssignmentController {
 
     @PutMapping(path = "/{id}")
     public ResponseEntity<Assignment> updateAssignment(@PathVariable String id,
-                                                       @RequestBody Assignment assignment,
+                                                       @RequestBody String createRequest,
                                                        HttpServletRequest request) {
+        JsonNode requestJson = validationService.validateJson(createRequest, CREATE_REQUEST_SCHEMA);
+        ObjectMapper objectMapper = new ObjectMapper();
+        Assignment assignment = null;
+        try {
+            assignment = objectMapper.treeToValue(requestJson, Assignment.class);
+        } catch (JsonProcessingException e) {
+            throw new JsonFormatException(e.getMessage());
+        }
+
         if(request.getQueryString()!=null){
             return ResponseEntity.badRequest().build();
         } else if (assignment.getPoints()<min || assignment.getPoints()>max){
