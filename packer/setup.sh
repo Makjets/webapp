@@ -13,7 +13,7 @@ sudo apt-get install -y openjdk-17-jdk
 # Create user for app
 sudo useradd csye6225
 
-mkdir -p /opt/csye6225
+sudo mkdir -p /opt/csye6225
 sudo mv /opt/webapp.jar /opt/csye6225/webapp.jar
 sudo mv /opt/users.csv /opt/csye6225/users.csv
 
