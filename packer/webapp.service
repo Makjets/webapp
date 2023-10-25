@@ -5,7 +5,7 @@ After=cloud-final.service
 [Service]
 User=csye6225
 WorkingDirectory=/opt
-ExecStart=/usr/bin/java -jar /opt/webapp.jar --spring.config.location=/opt/
+ExecStart=/usr/bin/java -jar /opt/csye6225/webapp.jar --spring.config.location=/opt/csye6225/
 Restart=always
 Type=simple
 StandardOutput=append:/var/log/webapp.log
