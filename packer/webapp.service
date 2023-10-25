@@ -1,6 +1,6 @@
 [Unit]
 Description=CSYE6225 Web Application
-After=network.target cloud-init-local.service cloud-init.service cloud-config.service cloud-final.service
+After=cloud-final.service
 
 [Service]
 User=csye6225
@@ -12,4 +12,4 @@ StandardOutput=append:/var/log/webapp.log
 StandardError=append:/var/log/webapp-error.log
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=cloud-init.target
