@@ -49,16 +49,18 @@ variable "subnet_id" {
 
 variable "files" {
   type = object({
-    jar_file      = string
-    user_csv_file = string
-    setup_script  = string
-    systemd_file  = string
+    jar_file          = string
+    user_csv_file     = string
+    setup_script      = string
+    systemd_file      = string
+    cloudwatch_config = string
   })
   default = {
-    setup_script  = "setup.sh"
-    jar_file      = "../build/libs/webapp-0.0.1-SNAPSHOT.jar"
-    user_csv_file = "../users.csv"
-    systemd_file  = "webapp.service"
+    setup_script      = "setup.sh"
+    jar_file          = "../build/libs/webapp-0.0.1-SNAPSHOT.jar"
+    user_csv_file     = "../users.csv"
+    systemd_file      = "webapp.service"
+    cloudwatch_config = "cloudwatch-config.json"
   }
 }
 
@@ -138,11 +140,17 @@ build {
     destination = "/tmp/webapp.service"
   }
 
+  provisioner "file" {
+    source      = "${var.files.cloudwatch_config}"
+    destination = "/tmp/cloudwatch-config.json"
+  }
+
   provisioner "shell" {
     inline = [
       "pwd",
       "sudo mv /tmp/webapp.jar /opt/webapp.jar",
       "sudo mv /tmp/users.csv /opt/users.csv",
+      "sudo mv /tmp/cloudwatch-config.json /opt/cloudwatch-config.json",
       "sudo mv /tmp/webapp.service /etc/systemd/system/webapp.service",
     ]
   }
