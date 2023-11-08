@@ -1,4 +1,4 @@
-package tech.stark.webapp.config;
+package tech.stark.webapp.logging;
 
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;

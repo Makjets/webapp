@@ -1,4 +1,4 @@
-package tech.stark.webapp.config;
+package tech.stark.webapp.logging;
 
 import com.timgroup.statsd.StatsDClient;
 import jakarta.servlet.FilterChain;
@@ -6,8 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -35,10 +34,11 @@ public class RequestCachingFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         CachedHttpServletRequest cachedHttpServletRequest = new CachedHttpServletRequest(request);
+        filterChain.doFilter(cachedHttpServletRequest, response);
         LOGGER.info("URI:%s %s | status: %s".formatted(cachedHttpServletRequest.getMethod(),
                 cachedHttpServletRequest.getRequestURI(),response.getStatus()));
+
         countMetrics(cachedHttpServletRequest.getRequestURI(),cachedHttpServletRequest.getMethod());
-        filterChain.doFilter(cachedHttpServletRequest, response);
     }
 
     private void countMetrics(String requestURI, String method) {
