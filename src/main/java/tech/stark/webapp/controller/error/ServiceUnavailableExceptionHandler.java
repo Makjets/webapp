@@ -4,16 +4,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
-public class JsonFormatExceptionHandler {
+public class ServiceUnavailableExceptionHandler {
 
-    @ExceptionHandler({JsonFormatException.class})
+    @ExceptionHandler({ServiceUnavailableException.class})
     public ResponseEntity<?> handleNoHandlerFoundException(
-            JsonFormatException ex, HttpServletRequest httpServletRequest) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).contentType(MediaType.APPLICATION_JSON).body("");
+            ServiceUnavailableException ex, HttpServletRequest httpServletRequest) {
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).contentType(MediaType.APPLICATION_JSON).body("");
     }
 }

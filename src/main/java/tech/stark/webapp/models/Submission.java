@@ -7,28 +7,22 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
-
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "Account")
-public class Account {
+@Table(name = "Submission")
+public class Submission {
 
     @Id
     @GeneratedValue(strategy= GenerationType.UUID)
     private String id;
-    private String first_name;
-    private String last_name;
-    @Column(unique=true)
-    private String email;
+
+    private String assignment_id;
+    private String submission_url;
+    private String submission_date;
+    private String assignment_updated;
     @JsonIgnore
-    private String password;
-    @JsonIgnore
-    private String account_created;
-    @JsonIgnore
-    private String account_updated;
+    private String user_email;
 }

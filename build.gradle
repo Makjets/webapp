@@ -40,6 +40,12 @@ dependencies {
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.1'
 	runtimeOnly("com.mysql:mysql-connector-j")
 
+	implementation(platform("software.amazon.awssdk:bom:2.21.1"))
+	implementation(platform("software.amazon.awssdk:bom:2.21.1"))
+	implementation("software.amazon.awssdk:sns")
+	implementation("software.amazon.awssdk:sso")
+	implementation("software.amazon.awssdk:ssooidc")
+
 	implementation 'com.intuit.karate:karate-core:1.4.0'
 	testImplementation 'com.intuit.karate:karate-junit5:1.4.0'
 

@@ -7,7 +7,7 @@ import com.networknt.schema.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import tech.stark.webapp.WebappApplication;
-import tech.stark.webapp.controller.error.JsonFormatException;
+import tech.stark.webapp.controller.error.BadRequestException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,9 +31,9 @@ public class ValidationService {
                 errorsCombined.append(error.toString()).append("\n");
             }
             if (errors.size() > 0)
-                throw new JsonFormatException("Improper json format: \n" + errorsCombined);
+                throw new BadRequestException("Improper json format: \n" + errorsCombined);
         } catch (JsonProcessingException e) {
-            throw new JsonFormatException("Failed to parse the body into json");
+            throw new BadRequestException("Failed to parse the body into json");
         } catch (IOException e) {
             throw new JsonSchemaException("Error occurred while fetching the schema from resource");
         }
