@@ -19,6 +19,8 @@ import tech.stark.webapp.models.Submission;
 import tech.stark.webapp.service.AssignmentService;
 import tech.stark.webapp.service.ValidationService;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 
@@ -142,6 +144,18 @@ public class AssignmentController {
             throw new BadRequestException(e.getMessage());
         }
         submission.setAssignment_id(id);
+
+        try {
+            URL url = new URL(submission.getSubmission_url());
+            if (!submission.getSubmission_url().toLowerCase().endsWith(".zip")) {
+                throw new BadRequestException("Invalid URL: URL must end with '.zip'");
+            }
+        } catch (MalformedURLException e) {
+            throw new BadRequestException("Invalid URL: " + submission.getSubmission_url() + " " + e.getMessage());
+        }
+
+        // Check if the URL ends with ".zip"
+
         Optional<Submission> opt = assignmentService.postSubmission(submission,id);
         return ResponseEntity.ok(submission);
     }

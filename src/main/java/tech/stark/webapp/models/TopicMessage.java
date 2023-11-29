@@ -15,6 +15,7 @@ public class TopicMessage {
     private Submission submission;
     private Account account;
     private Assignment assignment;
+    private int attempts;
 
     @Override
     public String toString() {

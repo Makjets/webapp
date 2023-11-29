@@ -1,5 +1,7 @@
 package tech.stark.webapp.service;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import software.amazon.awssdk.services.sns.model.PublishResponse;
 import software.amazon.awssdk.services.sns.model.SnsException;
 import tech.stark.webapp.controller.error.BadRequestException;
 import tech.stark.webapp.controller.error.ServiceUnavailableException;
+import tech.stark.webapp.models.Account;
 import tech.stark.webapp.models.Assignment;
 import tech.stark.webapp.models.Submission;
 import tech.stark.webapp.models.TopicMessage;
@@ -22,6 +25,9 @@ import tech.stark.webapp.repository.SubmissionRepository;
 import tech.stark.webapp.security.SecurityService;
 
 import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,9 +40,9 @@ public class AssignmentService {
 
     @Value("${aws.sns.topicArn}")
     private String topic_arn;
-
+    @PersistenceContext
+    private EntityManager entityManager;
     private final SecurityService securityService;
-
 
     private AccountService accountService;
 
@@ -114,12 +120,27 @@ public class AssignmentService {
             throw new BadRequestException("assignment id "+id+" doesn't exist");
         }
         Assignment assignment = assignmentRepository.findById(id).get();
+
+        Instant deadline = Instant.parse(assignment.getDeadline());
+        Instant currentInstant = Instant.now();
+        if(currentInstant.isAfter(deadline)) {
+            throw new BadRequestException("Assignment Deadline passed, you can no longer submit for this assignment");
+        }
+
+        submission.setAssignment_id(id);
+        String now = Instant.now().toString();
+        submission.setSubmission_date(now);
+        submission.setSubmission_updated(now);
+        submission.setUser_email(securityService.getUser().getUsername());
+
+        List<Submission> submissionList = get_submissions_by_user_assignment(submission.getUser_email(), assignment.getId());
+        LOGGER.info(submissionList.toString());
+
+        if(assignment.getNum_of_attempts()<= submissionList.size()){
+            throw new BadRequestException("Number of attempts exceeded for assignment");
+        }
+
         try {
-            submission.setAssignment_id(id);
-            String now = Instant.now().toString();
-            submission.setSubmission_date(now);
-            submission.setAssignment_updated(now);
-            submission.setUser_email(securityService.getUser().getUsername());
             submissionRepository.save(submission);
 
         } catch (Exception e){
@@ -127,6 +148,7 @@ public class AssignmentService {
             throw new ServiceUnavailableException("");
         }
         TopicMessage message = new TopicMessage();
+        message.setAttempts(submissionList.size() + 1);
         message.setSubmission(submission);
         message.setAccount(accountService.getByEmail(submission.getUser_email()).get());
         message.setAssignment(assignment);
@@ -144,6 +166,19 @@ public class AssignmentService {
             LOGGER.error(e.awsErrorDetails().errorMessage());
         }
         return Optional.of(submission);
+    }
+
+    public List<Submission> get_submissions_by_user_assignment(String user_email, String assignment_id) {
+        try {
+            List<Submission> submissionsList = entityManager.createQuery("SELECT a FROM Submission a WHERE a.assignment_id = :assignment_id AND a.user_email = :user_email", Submission.class)
+                    .setParameter("assignment_id", assignment_id)
+                    .setParameter("user_email", user_email)
+                    .getResultList();
+
+            return submissionsList;
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
     }
 
 }
