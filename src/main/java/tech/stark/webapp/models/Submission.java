@@ -22,7 +22,7 @@ public class Submission {
     private String assignment_id;
     private String submission_url;
     private String submission_date;
-    private String assignment_updated;
+    private String submission_updated;
     @JsonIgnore
     private String user_email;
 }
