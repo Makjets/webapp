@@ -84,6 +84,9 @@ public class AssignmentService {
     public Optional<Boolean> deleteAssigment(String id) {
         if(assignmentRepository.existsById(id)){
             Assignment oldAssignment = assignmentRepository.findById(id).get();
+            if(get_submissions_by_assignment(id).size()>0){
+                throw new BadRequestException("Assignment has submissions posted, cannot delete");
+            }
             if(oldAssignment.getUser_email().equals(securityService.getUser().getUsername())){
                 assignmentRepository.deleteById(id);
                 return Optional.of(true);
@@ -180,5 +183,18 @@ public class AssignmentService {
             return new ArrayList<>();
         }
     }
+
+    public List<Submission> get_submissions_by_assignment(String assignment_id) {
+        try {
+            List<Submission> submissionsList = entityManager.createQuery("SELECT a FROM Submission a WHERE a.assignment_id = :assignment_id", Submission.class)
+                    .setParameter("assignment_id", assignment_id)
+                    .getResultList();
+
+            return submissionsList;
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
+    }
+
 
 }
