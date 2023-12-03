@@ -165,4 +165,9 @@ build {
       "MYSQL_PASSWORD=${var.sql_config.sql_password}",
     ]
   }
+
+  post-processor "manifest" {
+    output     = "manifest.json"
+    strip_path = true
+  }
 }
