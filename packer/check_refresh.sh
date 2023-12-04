@@ -10,21 +10,51 @@ autoscaling_group_name="$1"
 iteration=1
 
 while true; do
-    refresh_status=$(aws autoscaling describe-instance-refreshes --auto-scaling-group-name "$autoscaling_group_name" --query 'InstanceRefreshes[0].Status' --output text)
+    refresh_status=$(aws autoscaling describe-instance-refreshes --auto-scaling-group-name "$autoscaling_group_name" --query 'InstanceRefreshes[0].Status' --output text --profile demo)
 
     echo "Iteration $iteration:"
     echo $refresh_status
 
-    if [ "$refresh_status" == "Successful" ]; then
-        echo "Instance refresh completed successfully."
-        break
-    elif [ "$refresh_status" == "Failed" ]; then
-        echo "Instance refresh failed."
-        exit 1
-    else
-        echo "Instance refresh in progress..."
-        sleep 20
-    fi
+    case "$refresh_status" in
+          "Pending")
+            echo "Instance refresh is pending."
+            ;;
+          "InProgress")
+            echo "Instance refresh is in progress."
+            ;;
+          "Successful")
+            echo "Instance refresh completed successfully."
+            exit 0
+            break
+            ;;
+          "Failed")
+            echo "Instance refresh failed."
+            exit 1
+            ;;
+          "Cancelling")
+            echo "Instance refresh is being cancelled."
+            ;;
+          "Cancelled")
+            echo "Instance refresh is cancelled."
+            exit 1
+            break
+            ;;
+          "RollbackInProgress")
+            echo "Instance refresh is being rolled back."
+            ;;
+          "RollbackFailed")
+            echo "Rollback failed to complete. You can troubleshoot using the status reason and the scaling activities."
+            exit 1
+            ;;
+          "RollbackSuccessful")
+            echo "Rollback completed successfully."
+            break
+            ;;
+          *)
+            echo "Unknown instance refresh status: $refresh_status"
+            ;;
+    esac
+    sleep 20
 
     ((iteration++))
 done
