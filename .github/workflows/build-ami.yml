@@ -98,6 +98,7 @@ jobs:
         run: "echo $AMI_ID"
 
       - name: Create Launch Template Version
+        working-directory: ./packer
         run: |
           aws ec2 create-launch-template-version \
             --launch-template-name csye6225_asgtp \
@@ -105,3 +106,18 @@ jobs:
             --source-version 1 \
             --launch-template-data "ImageId=${AMI_ID}" \
             >> template.json
+
+      - name: start instance refresh
+        working-directory: ./packer
+        run: |
+          aws autoscaling start-instance-refresh \
+            --auto-scaling-group-name ${{ vars.ASG_NAME }} \
+            --desired-configuration file://refresh_config.json \
+            --preferences file://preferences.json \
+            >> instancerefresh.json
+
+      - name: Run check_refresh.sh script
+        working-directory: ./packer
+        run: |
+          chmod +x check_refresh.sh
+          ./check_refresh.sh ${{ vars.ASG_NAME }}
