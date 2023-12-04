@@ -42,6 +42,8 @@ public class SecurityConfiguration {
                         .permitAll())
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers("/v1/**")
                         .authenticated())
+                .authorizeHttpRequests(authorize -> authorize.requestMatchers("/v2/**")
+                        .authenticated())
                 .httpBasic(Customizer.withDefaults());
         return http.build();
     }
