@@ -10,7 +10,7 @@ autoscaling_group_name="$1"
 iteration=1
 
 while true; do
-    refresh_status=$(aws autoscaling describe-instance-refreshes --auto-scaling-group-name "$autoscaling_group_name" --query 'InstanceRefreshes[0].Status' --output text --profile demo)
+    refresh_status=$(aws autoscaling describe-instance-refreshes --auto-scaling-group-name "$autoscaling_group_name" --query 'InstanceRefreshes[0].Status' --output text)
 
     echo "Iteration $iteration:"
     echo $refresh_status
