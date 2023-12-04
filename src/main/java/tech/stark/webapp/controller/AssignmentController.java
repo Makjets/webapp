@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/v2/assignments")
+@RequestMapping("/v1/assignments")
 public class AssignmentController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AssignmentController.class);
     private static final String CREATE_REQUEST_SCHEMA = "assignment_schema.json";
