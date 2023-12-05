@@ -85,6 +85,16 @@ This application includes integration tests using Karate. You can run these test
 gradle test
 ```
 
+## SSL Certificate
+
+To import SSL certificate in aws certificate manager use the following command 
+
+```bash
+aws acm import-certificate --profile <aws profile> \
+  --certificate fileb://<certificate file> \
+  --private-key fileb://<private key file>
+```
+
 For detailed documentation on writing and running Karate tests, refer to the [Karate documentation](https://github.com/intuit/karate).
 
 ## Docker Compose File Description
