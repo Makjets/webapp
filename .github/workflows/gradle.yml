@@ -43,10 +43,9 @@ jobs:
       run: docker-compose -f docker-compose.yml up -d
     - name: checks
       run: java -version && pwd && ls -al
-    - name: test mysql
-      run: mysql -h 127.0.0.1 --port 3306 -u user -ppassword -e 'CREATE DATABASE IF NOT EXISTS test;'
+#    - name: test mysql
+#      run: mysql -h 127.0.0.1 --port 3306 -u user -ppassword -e 'CREATE DATABASE IF NOT EXISTS test;'
     - name: Test with Gradle
       run: gradle test
       env:
         ACTIONS_RUNNER_DEBUG: ${{ secrets.ACTIONS_RUNNER_DEBUG }}
-      
